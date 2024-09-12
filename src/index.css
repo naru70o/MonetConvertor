@@ -1,0 +1,19 @@
+/*  */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-image: linear-gradient(to bottom right, #8600b2, #9a04cd);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 1.4rem;
+}
