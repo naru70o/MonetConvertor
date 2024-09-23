@@ -23,9 +23,10 @@ function Logo() {
 
 function FormInput() {
   const [base, setBase] = useState("USD");
-  const [rate, setRate] = useState("EUR");
+  const [query, setQuery] = useState("EUR");
   const [firstInput, setfirstInput] = useState(1);
   const [toInput, setToInput] = useState(0);
+  const [data, setData] = useState({})
 
   function handlebase(value) {
     setBase(value);
@@ -33,39 +34,46 @@ function FormInput() {
   }
 
   function onHandlerrate(value) {
-    setRate(value);
+    setQuery(value);
   }
 
   function firstInputHandler(value) {
-    setfirstInput(+value);
-    console.log(+value);
+    if (typeof(value)== NaN){
+    setfirstInput(0);
+    return
+    }
+    setfirstInput(value)
+
+    console.log(value);
   }
   function toHandler(value) {
     setToInput(value);
   }
 
   function TotalRage(data) {
-    toHandler(+data);
+    toHandler(data);
   }
 
   useEffect(
     function () {
       async function FetchApi() {
         const res = await fetch(
-          `https://api.frankfurter.app/latest?amount=${firstInput}&from=${base}&to=${rate}`
+          `https://api.frankfurter.app/latest?amount=${firstInput}&from=${base}&to=${query}`
         );
         const data = await res.json();
 
         console.log(data);
-        // Get the conversion rate from the API
-        const conversionRate = data.rates[rate];
+        // Get the conversion query from the API
+        const conversionRate = parseFloat(data.rates[query]);
         console.log(conversionRate);
-        const convertedAmount = firstInput * conversionRate;
+        const convertedAmount = conversionRate;
+
+        
         TotalRage(convertedAmount);
       }
       FetchApi();
     },
-    [firstInput, base, rate]
+    [firstInput, base, query]
   );
 
   return (
@@ -82,16 +90,9 @@ function FormInput() {
           <option value="INR">INR</option>
         </select>
 
-        <input
-          type="text"
-          value={firstInput}
-          onChange={(e) => firstInputHandler(e.target.value)}
-          className="rounded-2xl text-[#708090] outline-none px-4 max-w-60"
-        />
-      </li>
-      <li className="grid grid-cols-2 mt-3 items-center gap-x-3">
+
         <select
-          value={rate}
+          value={query}
           onChange={(e) => onHandlerrate(e.target.value)}
           className="max-w-40 rounded-lg outline-none p-1"
         >
@@ -100,13 +101,27 @@ function FormInput() {
           <option value="CAD">CAD</option>
           <option value="INR">INR</option>
         </select>
+
+        
+      </li>
+      <li className="grid grid-cols-2 mt-3 items-center gap-x-3">
+  
+      <input
+          type="number"
+          value={firstInput}
+          onChange={(e) => firstInputHandler(parseFloat(e.target.value))}
+          className="rounded-2xl text-[#708090] outline-none px-4 max-w-60"
+        />
+
         <input
-          type="text"
+          type="number"
           value={toInput}
           onChange={setToInput}
           className="rounded-2xl text-[#ffff] outline-none px-4 max-w-60"
           disabled
         />
+
+
       </li>
       <p className="text-white mt-11 text-center inline-block">
         your money gonna be in x 0
